@@ -1,7 +1,7 @@
 export as namespace odiff;
 export = odiff;
 
-declare function odiff(A: any, B: any): odiff.odiffResult[];
+declare function odiff(A: any, B: any, options: object): odiff.odiffResult[];
 
 declare namespace odiff {
   export type odiffResult = {

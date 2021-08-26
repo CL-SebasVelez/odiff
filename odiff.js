@@ -8,8 +8,14 @@
     // value
     // values
     // count
-module.exports = function(a,b) {
+var globalOptions = {
+    allProperties: false
+}
+Object.seal(globalOptions)
+
+module.exports = function(a,b,options = {}) {
     var results = []
+    Object.assign(globalOptions,options)
     diffInternal(a,b,results,[])
     return results
 }
@@ -192,9 +198,10 @@ function similar(a,b) {
 
         var tenPercent = a.length/10
         var notEqual = Math.abs(a.length-b.length) // initialize with the length difference
+        var conditions = !globalOptions.allProperties ? notEqual >= 2 && notEqual > tenPercent : notEqual >= 0
         for(var n=0; n<a.length; n++) {
             if(equal(a[n],b[n])) {
-                if(notEqual >= 2 && notEqual > tenPercent || notEqual === a.length) {
+                if (conditions || notEqual === a.length) {
                     return false
                 }
 
@@ -212,6 +219,7 @@ function similar(a,b) {
         var keyLength = Object.keys(keyMap).length
         var tenPercent = keyLength / 10
         var notEqual = 0
+        var conditions = !globalOptions.allProperties ? (notEqual >= 2 && notEqual > tenPercent) : notEqual >= 0;
         for(var key in keyMap) {
             var aVal = a[key]
             var bVal = b[key]
